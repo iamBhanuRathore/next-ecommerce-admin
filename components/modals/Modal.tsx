@@ -1,11 +1,12 @@
 "use client";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "./ui/dialog";
+} from "@/components/ui/dialog";
 
 interface ModalProps {
   title: string;
@@ -22,6 +23,13 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
 }) => {
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  if (!isMounted) {
+    return null;
+  }
   const onChange = (open: Boolean) => {
     if (!open) {
       onClose();
