@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import { db } from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -24,7 +25,7 @@ export default async function ({
   }
   return (
     <Fragment>
-      <div>This Will be a Navbar</div>
+      <Navbar />
       {children}
     </Fragment>
   );

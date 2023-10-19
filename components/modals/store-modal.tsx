@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { useToast } from "@/components/ui/use-toast";
+import { redirect } from "next/navigation";
 import { useStoreModal } from "@/hooks/use-store-modal";
 import { storeFormSchema } from "@/lib/Validations/formSchema";
 
@@ -24,6 +25,8 @@ import { Button } from "../ui/button";
 export const StoreModal = () => {
   const { isOpen, onClose, onOpen } = useStoreModal();
   const [loading, setLoading] = useState<boolean>(false);
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof storeFormSchema>>({
     resolver: zodResolver(storeFormSchema),
     defaultValues: {
@@ -35,8 +38,18 @@ export const StoreModal = () => {
       setLoading(true);
       const { data } = await axios.post("/api/stores", { ...values });
       console.log(data);
+      // We are Doing This when we create a new Store its not creating instantaneously thats why we need to use window object otherwise we can also use the redirect but after using that we need reload the page
+      window.location.assign(`/${data.id}`);
+      // We can use this but we need to reload the page
+      // redirect(`/${data.id}`);
     } catch (error) {
       console.log("[StoreModal]", error);
+      toast({
+        title: "Error",
+        type: "background",
+        variant: "destructive",
+        description: "Some Error Occured",
+      });
     } finally {
       setLoading(false);
     }
