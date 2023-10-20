@@ -3,7 +3,7 @@ import { db } from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { Fragment } from "react";
-export default async function ({
+export default async function Layout({
   children,
   params,
 }: {

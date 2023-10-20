@@ -5,6 +5,7 @@ import React from "react";
 
 const SetUpLayout = async ({ children }: { children: React.ReactNode }) => {
   const { userId } = auth();
+  console.log("in here");
   if (!userId) {
     redirect("/sign-in");
   }
