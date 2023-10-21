@@ -23,14 +23,14 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
 export const StoreModal = () => {
-  const { isOpen, onClose, onOpen } = useStoreModal();
+  const { isOpen, onClose } = useStoreModal();
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof storeFormSchema>>({
     resolver: zodResolver(storeFormSchema),
     defaultValues: {
-      name: "Bhanu",
+      name: "New Store",
     },
   });
   const onSubmit = async (values: z.infer<typeof storeFormSchema>) => {
@@ -59,7 +59,8 @@ export const StoreModal = () => {
       title="Create a new Store"
       description="Add a new Store manage Products"
       isOpen={isOpen}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <div className="space-y-4 py-2 pb-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -85,7 +86,8 @@ export const StoreModal = () => {
                 disabled={loading}
                 type="button"
                 onClick={onClose}
-                variant="outline">
+                variant="outline"
+              >
                 Cancel
               </Button>
               <Button disabled={loading} type="submit">

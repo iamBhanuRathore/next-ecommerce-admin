@@ -25,8 +25,8 @@ const Settings: React.FC<SettingPageProps> = async ({ params }) => {
     redirect("/");
   }
   return (
-    <div className="flex-col">
-      <div className="flex-1 space-x-5 p-8">
+    <div>
+      <div className="p-8 flex flex-col ">
         <SettingForm initialData={store} />
       </div>
     </div>

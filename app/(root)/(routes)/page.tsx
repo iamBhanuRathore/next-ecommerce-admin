@@ -10,7 +10,7 @@ export default function SetUpPage() {
       onOpen();
     }
   }, [isOpen, onOpen]);
-  return null;
+  // return null;
   return (
     <section className="p-10">
       <UserButton afterSignOutUrl="/" />

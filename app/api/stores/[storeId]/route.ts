@@ -57,7 +57,7 @@ export async function DELETE(
     // We have not used New Keyword because we are using the json method
     return NextResponse.json(store, { status: 200 });
   } catch (error) {
-    console.log("[Store_Patch_Delete]", error);
+    console.log("[Store_Delete]", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

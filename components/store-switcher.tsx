@@ -32,7 +32,7 @@ interface StoreSwitcherProps extends PopoverTriggerProps {
   items: store[];
 }
 const StoreSwitcher = ({ className, items = [] }: StoreSwitcherProps) => {
-  const { isOpen, onClose, onOpen } = useStoreModal();
+  const { onOpen } = useStoreModal();
   const [open, setOpen] = useState<boolean>(false);
   const params = useParams();
   const router = useRouter();
