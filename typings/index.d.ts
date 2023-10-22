@@ -1,5 +1,15 @@
 import * as z from "zod";
 
-import { settingStoreFormSchema } from "@/lib/Validations/formSchema";
+import {
+  billingStoreFormSchema,
+  settingStoreFormSchema,
+} from "@/lib/Validations/formSchema";
 
-export type SettingsFormValues = z.infer<typeof settingStoreFormSchema>;
+export type SettingsFormValuesType = z.infer<typeof settingStoreFormSchema>;
+export type BillingsFormValuesType = z.infer<typeof billingStoreFormSchema>;
+
+export type BillboardCloumnType = {
+  id: string;
+  label: string;
+  createdAt: string;
+};

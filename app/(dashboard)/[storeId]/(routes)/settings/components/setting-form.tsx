@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Heading from "@/components/Heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { SettingsFormValues } from "@/typings";
+import { SettingsFormValuesType } from "@/typings";
 import { settingStoreFormSchema } from "@/lib/Validations/formSchema";
 import {
   FormControl,
@@ -39,12 +39,12 @@ const SettingForm: React.FC<SettingFormProps> = ({ initialData }) => {
 
   console.log({ hello: initialData });
 
-  const form = useForm<SettingsFormValues>({
+  const form = useForm<SettingsFormValuesType>({
     resolver: zodResolver(settingStoreFormSchema),
     defaultValues: initialData,
   });
 
-  const onSubmit = async (data: SettingsFormValues) => {
+  const onSubmit = async (data: SettingsFormValuesType) => {
     try {
       setLoading(true);
       await axios.patch(`/api/stores/${initialData.id}`, data);
@@ -99,8 +99,7 @@ const SettingForm: React.FC<SettingFormProps> = ({ initialData }) => {
           disabled={loading}
           variant="destructive"
           size="sm"
-          onClick={() => setOpen(true)}
-        >
+          onClick={() => setOpen(true)}>
           <Trash className="w-4 h-4" />
         </Button>
       </div>
@@ -108,8 +107,7 @@ const SettingForm: React.FC<SettingFormProps> = ({ initialData }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-full p-5"
-        >
+          className="space-y-8 w-full p-5">
           <div className="md:grid grid-cols-3 gap-8 ">
             <FormField
               control={form.control}
