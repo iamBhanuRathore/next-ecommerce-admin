@@ -1,36 +1,40 @@
 import React from "react";
 import { format } from "date-fns";
 
-import BillboardClient from "./components/BillboardClient";
+import CategoryClient from "./components/CategoryClient";
 import { db } from "@/lib/prismadb";
-import { BillboardCloumnType } from "@/typings";
+import { CategoryCloumnType } from "@/typings";
 
-const Billboards = async ({ params }: { params: { storeId: string } }) => {
-  const billboards = await db.billboard.findMany({
+const Categories = async ({ params }: { params: { storeId: string } }) => {
+  const categories = await db.category.findMany({
     where: {
       storeId: params.storeId,
+    },
+    include: {
+      billboard: true,
     },
     orderBy: {
       createdAt: "desc",
     },
   });
-  if (!billboards) null;
-  const formattedBillboard: BillboardCloumnType[] = billboards.map((item) => ({
+  if (!categories) null;
+  const formattedCategories: CategoryCloumnType[] = categories.map((item) => ({
     id: item.id,
-    label: item.label,
+    name: item.name,
+    billboardLabel: item.billboard.label,
     createdAt: format(item.createdAt, "MMMM do , yyyy"),
   }));
-  console.log({ formattedBillboard });
+  console.log({ formattedCategories });
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8">
-        <BillboardClient data={formattedBillboard} />
+        <CategoryClient data={formattedCategories} />
       </div>
     </div>
   );
 };
 
-export default Billboards;
+export default Categories;
 
 const arr = [
   { id: "id_0", label: "Label 0", createdAt: "2023-10-23T06:44:00.968Z" },

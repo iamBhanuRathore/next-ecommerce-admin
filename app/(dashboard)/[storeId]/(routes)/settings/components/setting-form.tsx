@@ -37,8 +37,6 @@ const SettingForm: React.FC<SettingFormProps> = ({ initialData }) => {
   const origin = useOrigin();
   const router = useRouter();
 
-  console.log({ hello: initialData });
-
   const form = useForm<SettingsFormValuesType>({
     resolver: zodResolver(settingStoreFormSchema),
     defaultValues: initialData,
@@ -99,7 +97,8 @@ const SettingForm: React.FC<SettingFormProps> = ({ initialData }) => {
           disabled={loading}
           variant="destructive"
           size="sm"
-          onClick={() => setOpen(true)}>
+          onClick={() => setOpen(true)}
+        >
           <Trash className="w-4 h-4" />
         </Button>
       </div>
@@ -107,7 +106,8 @@ const SettingForm: React.FC<SettingFormProps> = ({ initialData }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-full p-5">
+          className="space-y-8 w-full p-5"
+        >
           <div className="md:grid grid-cols-3 gap-8 ">
             <FormField
               control={form.control}

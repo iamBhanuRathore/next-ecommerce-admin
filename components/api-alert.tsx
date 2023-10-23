@@ -31,7 +31,6 @@ export const ApiAlert: React.FC<ApiAlertProps> = ({
     toast({
       title: "Copied successfully",
       description: "Api route Copied to clipboard",
-      className: "bg-green-500 text-white",
     });
   };
   return (
