@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-import { CategoryCloumnType } from "@/typings";
+import { SizeCloumnType } from "@/typings";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +19,7 @@ import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
 
 interface CellActionProps {
-  data: CategoryCloumnType;
+  data: SizeCloumnType;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -33,26 +33,26 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     navigator.clipboard.writeText(data.id);
     toast({
       title: "Success",
-      description: "Category Id Copied to Clipboard",
+      description: "Billboard Id Copied to Clipboard",
     });
   };
   const onEdit = (id: string) => {
-    router.push(`/${params.storeId}/categories/${id}`);
+    router.push(`/${params.storeId}/billboards/${id}`);
   };
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/stores${params.storeId}/categories/${data.id}`);
+      await axios.delete(`/api/stores${params.storeId}/billboards/${data.id}`);
       router.refresh();
       toast({
         title: "Success",
-        description: "You have successfully deleted the Categories.",
+        description: "You have successfully deleted the Billboard.",
       });
     } catch (error) {
       toast({
         title: "Error",
         description:
-          "Make sure you removed all the Product using this Category first.",
+          "Make sure you removed all the categories using this billboard first.",
       });
     } finally {
       setLoading(false);

@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { CategoryCloumnType } from "@/typings";
+import { BillboardCloumnType } from "@/typings";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,7 +11,7 @@ import { CellAction } from "./cell-action";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const columns: ColumnDef<CategoryCloumnType>[] = [
+export const columns: ColumnDef<BillboardCloumnType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -32,7 +32,7 @@ export const columns: ColumnDef<CategoryCloumnType>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "label",
     // header: "Label",
     header: ({ column }) => {
       console.log(column.getIsSorted());
@@ -40,17 +40,17 @@ export const columns: ColumnDef<CategoryCloumnType>[] = [
         <Button
           variant="ghost"
           className={column.getIsSorted() ? "font-bold text-primary" : ""}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Name
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Label
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "billboard",
-    header: "Billboard",
-    cell: ({ row }) => row.original.billboardLabel,
+    accessorKey: "createdAt",
+    header: "Date",
     // header: ({ column }) => {
     //   return (
     //     <Button
@@ -62,10 +62,6 @@ export const columns: ColumnDef<CategoryCloumnType>[] = [
     //     </Button>
     //   );
     // },
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Date",
   },
   {
     id: "Action",
