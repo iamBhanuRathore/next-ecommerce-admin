@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-import { BillboardCloumnType } from "@/typings";
+import { ColorCloumnType } from "@/typings";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +19,7 @@ import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
 
 interface CellActionProps {
-  data: BillboardCloumnType;
+  data: ColorCloumnType;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -33,26 +33,26 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     navigator.clipboard.writeText(data.id);
     toast({
       title: "Success",
-      description: "Billboard Id Copied to Clipboard",
+      description: "Color Id Copied to Clipboard",
     });
   };
   const onEdit = (id: string) => {
-    router.push(`/${params.storeId}/billboards/${id}`);
+    router.push(`/${params.storeId}/colors/${id}`);
   };
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/stores${params.storeId}/billboards/${data.id}`);
+      await axios.delete(`/api/stores${params.storeId}/colors/${data.id}`);
       router.refresh();
       toast({
         title: "Success",
-        description: "You have successfully deleted the Billboard.",
+        description: "You have successfully deleted the Color.",
       });
     } catch (error) {
       toast({
         title: "Error",
         description:
-          "Make sure you removed all the categories using this billboard first.",
+          "Make sure you removed all the products using this color first.",
       });
     } finally {
       setLoading(false);

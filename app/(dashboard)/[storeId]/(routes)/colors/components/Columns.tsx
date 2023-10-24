@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { BillboardCloumnType } from "@/typings";
+import { ColorCloumnType } from "@/typings";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,7 +11,7 @@ import { CellAction } from "./cell-action";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const columns: ColumnDef<BillboardCloumnType>[] = [
+export const columns: ColumnDef<ColorCloumnType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -32,7 +32,7 @@ export const columns: ColumnDef<BillboardCloumnType>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "label",
+    accessorKey: "name",
     // header: "Label",
     header: ({ column }) => {
       console.log(column.getIsSorted());
@@ -40,28 +40,29 @@ export const columns: ColumnDef<BillboardCloumnType>[] = [
         <Button
           variant="ghost"
           className={column.getIsSorted() ? "font-bold text-primary" : ""}
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Label
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
+    accessorKey: "value",
+    header: "Value",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-x-2">
+        {row.original.value}
+        <div
+          className="h-6 w-6 rounded-full border"
+          style={{ backgroundColor: row.original.value }}
+        />
+      </div>
+    ),
+  },
+  {
     accessorKey: "createdAt",
     header: "Date",
-    // header: ({ column }) => {
-    //   return (
-    //     <Button
-    //       variant="ghost"
-    //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    //     >
-    //       Date
-    //       <ArrowUpDown className="ml-2 h-4 w-4" />
-    //     </Button>
-    //   );
-    // },
   },
   {
     id: "Action",

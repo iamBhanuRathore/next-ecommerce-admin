@@ -1,13 +1,12 @@
 import React from "react";
 import { format } from "date-fns";
 
-import SizeClient from "./components/SizeClient";
+import ColorClient from "./components/ColorClient";
 import { db } from "@/lib/prismadb";
-import { SizeCloumnType } from "@/typings";
-import { priceFormatter } from "@/lib/utils";
+import { ColorCloumnType } from "@/typings";
 
-const Size = async ({ params }: { params: { storeId: string } }) => {
-  const sizes = await db.size.findMany({
+const Color = async ({ params }: { params: { storeId: string } }) => {
+  const colors = await db.color.findMany({
     where: {
       storeId: params.storeId,
     },
@@ -15,21 +14,21 @@ const Size = async ({ params }: { params: { storeId: string } }) => {
       createdAt: "desc",
     },
   });
-  if (!sizes) null;
-  const formattedSizes: SizeCloumnType[] = sizes.map((item) => ({
+  if (!colors) null;
+  const formattedColors: ColorCloumnType[] = colors.map((item) => ({
     id: item.id,
     name: item.name,
     value: item.value,
     createdAt: format(item.createdAt, "MMMM do , yyyy"),
   }));
-  console.log({ formattedSizes });
+  console.log({ formattedColors });
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8">
-        <SizeClient data={formattedSizes} />
+        <ColorClient data={formattedColors} />
       </div>
     </div>
   );
 };
 
-export default Size;
+export default Color;

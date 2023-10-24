@@ -6,39 +6,37 @@ import { Plus } from "lucide-react";
 import Heading from "@/components/Heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { BillboardCloumnType } from "@/typings";
+import { ColorCloumnType } from "@/typings";
 import { DataTable } from "@/components/data-table";
 import ApiList from "@/components/api-list";
 
 import { columns } from "./Columns";
 
-interface BillboardClientProps {
-  data: BillboardCloumnType[];
+interface ColorClientProps {
+  data: ColorCloumnType[];
 }
 
-const BillboardClient: React.FC<BillboardClientProps> = ({ data }) => {
+const ColorClient: React.FC<ColorClientProps> = ({ data }) => {
   const router = useRouter();
   const params = useParams();
   return (
     <>
       <div className="flex items-center justify-between">
         <Heading
-          title={`Billboard (${data.length ?? 999})`}
-          description="Manage Billboards for your Store"
+          title={`Color (${data.length ?? 999})`}
+          description="Manage Colors for your Store"
         />
-        <Button
-          onClick={() => router.push(`/${params.storeId}/billboards/new`)}
-        >
+        <Button onClick={() => router.push(`/${params.storeId}/colors/new`)}>
           <Plus className="mr-2 w-4 h-4" /> Add New
         </Button>
       </div>
       <Separator />
-      <DataTable searchKey="label" columns={columns} data={data} />
-      <Heading title="Api" description="API calls for Billboards" />
+      <DataTable searchKey="name" columns={columns} data={data} />
+      <Heading title="Api" description="API calls for Colors" />
       <Separator />
-      <ApiList entityName="billboards" entityIdName="billboardsId" />
+      <ApiList entityName="colors" entityIdName="colorId" />
     </>
   );
 };
 
-export default BillboardClient;
+export default ColorClient;

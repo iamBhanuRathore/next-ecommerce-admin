@@ -19,3 +19,10 @@ export const sizeStoreFormSchema = z.object({
   name: z.string().min(1),
   value: z.string().min(1),
 });
+export const colorStoreFormSchema = z.object({
+  name: z.string().min(1),
+  value: z
+    .string()
+    .min(4)
+    .regex(/^#/, { message: "String must be a Valid hex Code" }),
+});
