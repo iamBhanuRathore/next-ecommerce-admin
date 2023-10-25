@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Trash } from "lucide-react";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import { Billboard } from "@prisma/client";
+import { Category, Color, Product, ProductImage, Size } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import Heading from "@/components/Heading";
@@ -17,47 +17,72 @@ import {
   FormLabel,
   Form,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { BillingsFormValuesType } from "@/typings";
-import { billingStoreFormSchema } from "@/lib/Validations/formSchema";
+import { ProductsFormValuesType } from "@/typings";
+import { productStoreFormSchema } from "@/lib/Validations/formSchema";
 import ImageUpload from "@/components/image-upload";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
-interface BillingFormProps {
-  initialData: Billboard | null;
+interface ProductFormProps {
+  initialData: (Product & { images: ProductImage[] }) | null;
+  categories: Category[];
+  sizes: Size[];
+  colors: Color[];
 }
 
-const BillingForm: React.FC<BillingFormProps> = ({ initialData }) => {
+const ProductForm: React.FC<ProductFormProps> = ({
+  initialData,
+  categories,
+  colors,
+  sizes,
+}) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const params = useParams();
   const router = useRouter();
 
-  const form = useForm<BillingsFormValuesType>({
-    resolver: zodResolver(billingStoreFormSchema),
-    defaultValues: initialData || { label: "", imageUrl: "" },
+  const form = useForm<ProductsFormValuesType>({
+    resolver: zodResolver(productStoreFormSchema),
+    defaultValues: initialData || {
+      name: "",
+      images: [],
+      price: 0,
+      categoryId: "",
+      colorId: "",
+      isFeatured: false,
+      isArchived: false,
+    },
   });
-  const title = initialData ? "Edit Billboard" : "Create Billboard";
-  const description = initialData ? "Edit a Billboard" : "Add a new  Billboard";
-  const toastMessage = initialData ? "Billboard Updated" : "Billboard created.";
+  const title = initialData ? "Edit Product" : "Create Product";
+  const description = initialData ? "Edit a Product" : "Add a new  Product";
+  const toastMessage = initialData ? "Product Updated" : "Product created.";
   const action = initialData ? "Save Changes" : "Create";
 
-  const onSubmit = async (data: BillingsFormValuesType) => {
+  const onSubmit = async (data: ProductsFormValuesType) => {
     try {
       setLoading(true);
       if (initialData) {
         await axios.patch(
-          `/api/${params.storeId}/billboards/${params.billboardId}`,
+          `/api/${params.storeId}/products/${params.productId}`,
           data
         );
       } else {
-        await axios.post(`/api/${params.storeId}/billboards`, data);
+        await axios.post(`/api/${params.storeId}/products`, data);
       }
       router.refresh();
-      router.replace(`/${params.storeId}/billboards`);
+      router.replace(`/${params.storeId}/products`);
       toast({
         title: "Success",
         variant: "default",
@@ -77,19 +102,18 @@ const BillingForm: React.FC<BillingFormProps> = ({ initialData }) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/stores${params.storeId}/billboards/${params.billboardId}`
+        `/api/stores${params.storeId}/products/${params.productId}`
       );
       router.refresh();
-      router.push("/");
+      router.replace(`/${params.storeId}/products`);
       toast({
         title: "Success",
-        description: "You have successfully deleted the Billboard.",
+        description: "You have successfully deleted the Product.",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description:
-          "Make sure you removed all the categories using this billboard first.",
+        description: "Something Went Wrong.",
       });
     } finally {
       setLoading(false);
@@ -125,16 +149,22 @@ const BillingForm: React.FC<BillingFormProps> = ({ initialData }) => {
         >
           <FormField
             control={form.control}
-            name="imageUrl"
+            name="images"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Backgroud Image</FormLabel>
+                <FormLabel>Images</FormLabel>
                 <FormControl>
                   <ImageUpload
-                    value={field.value ? [field.value] : []}
+                    value={field.value.map((image) => image.url)}
                     disabled={loading}
-                    onChange={(url) => field.onChange(url)}
-                    onRemove={() => field.onChange("")}
+                    onChange={(url) =>
+                      field.onChange([...field.value, { url }])
+                    }
+                    onRemove={(url) =>
+                      field.onChange([
+                        ...field.value.filter((current) => current.url !== url),
+                      ])
+                    }
                   />
                 </FormControl>
                 <FormMessage />
@@ -144,17 +174,181 @@ const BillingForm: React.FC<BillingFormProps> = ({ initialData }) => {
           <div className="md:grid grid-cols-3 gap-8 ">
             <FormField
               control={form.control}
-              name="label"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Label</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Billboard Label"
+                      placeholder="ProductName"
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="999.90"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a Category"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="sizeId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Size</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a Size"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {sizes.map((size) => (
+                        <SelectItem key={size.id} value={size.id}>
+                          {size.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="colorId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a Color"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {colors.map((color) => (
+                        <SelectItem key={color.id} value={color.id}>
+                          <div className="flex items-center gap-x-4">
+                            {color.name}
+                            <div
+                              className="h-4 w-4 rounded-full border"
+                              style={{ backgroundColor: color.value }}
+                            />
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isFeatured"
+              render={({ field }) => (
+                <FormItem className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      // @ts-ignore
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Feature</FormLabel>
+                    <FormDescription>
+                      This Product will appear on Homepage
+                    </FormDescription>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isArchived"
+              render={({ field }) => (
+                <FormItem className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      // @ts-ignore
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Archived</FormLabel>
+                    <FormDescription>
+                      This Product will not appear anywhere in the store
+                    </FormDescription>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -170,4 +364,4 @@ const BillingForm: React.FC<BillingFormProps> = ({ initialData }) => {
   );
 };
 
-export default BillingForm;
+export default ProductForm;

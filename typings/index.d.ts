@@ -4,6 +4,7 @@ import {
   billingStoreFormSchema,
   categoryStoreFormSchema,
   colorStoreFormSchema,
+  productStoreFormSchema,
   settingStoreFormSchema,
   sizeStoreFormSchema,
 } from "@/lib/Validations/formSchema";
@@ -13,6 +14,7 @@ export type BillingsFormValuesType = z.infer<typeof billingStoreFormSchema>;
 export type CategoriesFormValuesType = z.infer<typeof categoryStoreFormSchema>;
 export type SizesFormValuesType = z.infer<typeof sizeStoreFormSchema>;
 export type ColorsFormValuesType = z.infer<typeof colorStoreFormSchema>;
+export type ProductsFormValuesType = z.infer<typeof productStoreFormSchema>;
 
 export type BillboardCloumnType = {
   id: string;
@@ -46,5 +48,14 @@ export type ProductCloumnType = {
   category: string;
   size: string;
   color: string;
+  createdAt: string;
+};
+export type OrdersCloumnType = {
+  id: string;
+  phone: string;
+  address: string;
+  isPaid: boolean;
+  totalPrice: string;
+  products: string;
   createdAt: string;
 };

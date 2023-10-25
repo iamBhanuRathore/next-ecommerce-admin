@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: { categoryId: string } }
 ) {
   try {
-    const category = await db.category.findMany({
+    const category = await db.category.findFirst({
       where: {
         id: params.categoryId,
       },

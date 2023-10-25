@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: { colorId: string } }
 ) {
   try {
-    const color = await db.color.findMany({
+    const color = await db.color.findFirst({
       where: {
         id: params.colorId,
       },
