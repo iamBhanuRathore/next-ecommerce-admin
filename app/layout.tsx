@@ -1,8 +1,9 @@
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import { Toaster } from "@/components/ui/toaster";
+import NextTopLoader from "nextjs-toploader";
 
+import { Toaster } from "@/components/ui/toaster";
 import { ModalProvider } from "@/providers/Modal-Provider";
 
 import "./globals.css";
@@ -24,6 +25,7 @@ export default function RootLayout({
       <ClerkProvider>
         <ModalProvider />
         <Toaster />
+        <NextTopLoader />
         <body className={inter.className}>{children}</body>
       </ClerkProvider>
     </html>

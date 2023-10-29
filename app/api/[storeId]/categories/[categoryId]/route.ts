@@ -12,6 +12,9 @@ export async function GET(
       where: {
         id: params.categoryId,
       },
+      include: {
+        billboard: true,
+      },
     });
     // We have not used New Keyword because we are using the json method
     return NextResponse.json(category, { status: 200 });
