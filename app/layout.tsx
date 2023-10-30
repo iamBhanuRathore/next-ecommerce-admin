@@ -25,7 +25,7 @@ export default function RootLayout({
       <ClerkProvider>
         <ModalProvider />
         <Toaster />
-        <NextTopLoader />
+        <NextTopLoader template='<div class="bar" role="bar"><div class="peg"></div></div>' />
         <body className={inter.className}>{children}</body>
       </ClerkProvider>
     </html>
