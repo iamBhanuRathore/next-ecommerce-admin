@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ModalProvider } from "@/providers/Modal-Provider";
 
 import "./globals.css";
+import { ThemeProvider } from "@/providers/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,9 +25,19 @@ export default function RootLayout({
     <html lang="en">
       <ClerkProvider>
         <ModalProvider />
+
         <Toaster />
         <NextTopLoader template='<div class="bar" role="bar"><div class="peg"></div></div>' />
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </body>
       </ClerkProvider>
     </html>
   );

@@ -10,7 +10,7 @@ const corsHeaders = {
 };
 
 export async function OPTIONS() {
-  return NextResponse.json({}, { headers: corsHeaders });
+  return NextResponse.json(null, { headers: corsHeaders });
 }
 
 export async function POST(
@@ -19,7 +19,8 @@ export async function POST(
 ) {
   try {
     const { productIds } = await req.json();
-    if (!productIds || productIds.length > 1) {
+    // return new NextResponse("Heloo", { status: 200 });
+    if (!productIds || productIds.length < 1) {
       return new NextResponse("ProductIds are required", { status: 400 });
     }
     const products = await db.product.findMany({
@@ -39,7 +40,7 @@ export async function POST(
           product_data: {
             name: product.name,
           },
-          unit_amount: product.price,
+          unit_amount: product.price * 100,
         },
       });
     });
@@ -76,12 +77,7 @@ export async function POST(
         orderId: order.id,
       },
     });
-    return NextResponse.json(
-      { url: session.url },
-      {
-        headers: corsHeaders,
-      }
-    );
+    return NextResponse.json({ url: session.url }, { headers: corsHeaders });
   } catch (error) {
     console.log(error);
     return NextResponse.json(

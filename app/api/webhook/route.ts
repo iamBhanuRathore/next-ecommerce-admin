@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   if (event.type === "checkout.session.completed") {
     const order = await db.order.update({
       where: {
-        id: session?.metadata?.storeId,
+        id: session?.metadata?.orderId,
       },
       data: {
         isPaid: true,
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         orderItems: true,
       },
     });
-    const productIds = order.orderItems.map((orderItem) => orderItem.id);
+    const productIds = order.orderItems.map((orderItem) => orderItem.productId);
     await db.product.updateMany({
       where: {
         id: {
@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
         isArchived: true,
       },
     });
-    return new NextResponse(null, { status: 200 });
+    return new NextResponse("Success. ", { status: 200 });
+  } else {
   }
 }
